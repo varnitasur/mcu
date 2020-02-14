@@ -1,65 +1,42 @@
 node {
  try  {
  notify('Job Started') 
-
-     
-  stage('Git-Checkout') {
+ 
+ stage('Git-Checkout') {
    git 'https://github.com/varnitasur/mindtree-2019.git'
   }
     
  def project_path="01-Jenkins/Code/petclinic"
  
  dir(project_path) {
-    
-  stage('Maven-Clean') {
-   sh label: '', script: 'mvn clean'
-  }
-    
- stage('Maven-Compile') {
-   sh label: '', script: 'mvn compile'
-  }
-
-  stage('Sonar Analysis'){
-        withSonarQubeEnv('SonarQube'){
-         sh 'mvn sonar:sonar' 
-        } 
- }	
- stage("Quality Gate")
-    {
-    timeout(time: 1, unit: 'HOURS') 
-    { 
-    def qg=waitForQualityGate()
-        if(qg.status!='OK'){
-	currentBuild.status='FAILURE'
-	error "Pipeline aborted due to Quality Gate Failure: ${qg.status}"
-	}
-    }
-}
-  
-  stage('Maven-Test') {
-   sh label: '', script: 'mvn test'
-  }
-  
-  
-   stage('Maven-Package') {
-   sh label: '', script: 'mvn package'
-  }
  
-  stage('Jfrog Artifacory Upload') {
-        def server= Artifactory.server 'Artifactory'
-                    def uploadSpec= """{
-                        "files": [{
-                        "pattern": "target/*.war",
-                        "target": "petclinic"}]
-                    }"""
-        server.upload(uploadSpec)
-        
-        }
-
-  stage ('Next Stage'){
-	input "Deploy to QA server ?"
-	}
+ stage('create artifact folder to store artifact'){
+    sh label: '', script: "mkdir warstorage"
+    }
+    
+ stage('Jfrog Artifactory download'){
+    def server= Artifactory.server 'Artifactory'
+    def downloadSpec = """{
+    "files": [
+    {
+      "pattern": "bikes/*.war",
+      "target": "/root/.jenkins/workspace/QA/02-Docker/warstorage/"
+      
+    }
+    ]
+    }"""
+    server.download(downloadSpec)
+   
+}
+   stage('Docker-Stage-Deployment') {
+   sh label: '', script: 'docker-compose up -d --build'
+  }
+  
+  stage ('Deploy approval'){
+	input "Deploy to production ?"
+	} 
  }
+
 
 notify('Job Completed')   
 } catch (err) {
