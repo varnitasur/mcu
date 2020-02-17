@@ -15,7 +15,7 @@ node {
     def downloadSpec = """{
     "files": [
     {
-      "pattern": "bikes/*.war",
+      "pattern": "petclinic/*.war",
       "target": "/root/.jenkins/workspace/QA/02-Docker/warstorage/"
       
     }
