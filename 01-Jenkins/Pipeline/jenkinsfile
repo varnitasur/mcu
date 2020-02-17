@@ -7,16 +7,18 @@ node {
    git 'https://github.com/varnitasur/microservice.git'
   }
   
-    stage('Sonar Analysis'){
-        withSonarQubeEnv('SonarQube'){
-         sh 'mvn sonar:sonar' 
-        } 
- }	
 
     
  def project_path="01-Jenkins/Code/petclinic"
  
  dir(project_path) {
+ 
+     stage('Sonar Analysis'){
+        withSonarQubeEnv('SonarQube'){
+         sh 'mvn sonar:sonar' 
+        } 
+ }	
+
     
   stage('Maven-Clean') {
    sh label: '', script: 'mvn clean'
