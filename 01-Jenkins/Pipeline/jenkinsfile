@@ -4,7 +4,7 @@ node {
 
      
   stage('Git-Checkout') {
-   git 'https://github.com/varnitasur/mindtree-2019.git'
+   git 'https://github.com/varnitasur/microservice.git'
   }
   
     stage('Sonar Analysis'){
