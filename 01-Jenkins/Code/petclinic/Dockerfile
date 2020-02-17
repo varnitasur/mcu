@@ -1,3 +1,3 @@
 FROM tomcat:8.0
-MAINTAINER Amit
-COPY target/petclinic.war /usr/local/tomcat/webapps/
+MAINTAINER Varnita
+COPY /root/.jenkins/workspace/QA/02-Docker/warstorage/ /usr/local/tomcat/webapps/
