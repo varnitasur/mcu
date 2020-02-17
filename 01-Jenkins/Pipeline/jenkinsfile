@@ -3,7 +3,7 @@ node {
  notify('Job Started') 
  
  stage('Git-Checkout') {
-   git 'https://github.com/varnitasur/mindtree-2019.git'
+   git 'https://github.com/varnitasur/microservice.git'
   }
     
  def project_path="01-Jenkins/Code/petclinic"
