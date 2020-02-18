@@ -1,2 +1,1 @@
-<<<<<<< HEAD
-Continuous integration
+#Continuous integration
